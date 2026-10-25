@@ -1,0 +1,15 @@
+:host {
+  display: block;
+}
+
+/* Las líneas del águila se crean desde el código, así que el estilo se lo damos
+   al dibujo entero y todas las líneas lo heredan. */
+.eagle {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible; /* al aletear, las alas se salen un poco del cuadro: que se vean */
+  stroke: rgba(255, 255, 255, 0.6); /* líneas blancas, como en el logo del club */
+  stroke-width: 1;
+  stroke-linecap: round;
+}
