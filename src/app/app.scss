@@ -1,0 +1,81 @@
+/*
+ * La columna de la derecha. Lo que hay dentro (ficha y vídeo) se acomoda
+ * según lo ancha que sea esta columna, no según el tamaño de la pantalla.
+ * Además se estira para medir lo mismo que la lista «Team».
+ */
+.player-zone {
+  container: player-zone / inline-size;
+  align-self: stretch;
+}
+
+/* Si la columna es estrecha (móvil): nombre, vídeo y datos, uno debajo del otro */
+.player-view {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    'hero'
+    'media'
+    'stats';
+}
+
+.player-media {
+  grid-area: media;
+}
+
+/*
+ * Truco para que el vídeo y los datos parezcan una sola tarjeta:
+ * ponemos un fondo vacío que ocupa el mismo hueco que los dos, y ellos
+ * se dibujan encima. Así siguen siendo dos componentes separados
+ * (como pide la rúbrica) pero se ven como uno.
+ */
+.player-body {
+  /* Sin esto Bootstrap lo pondría por encima del vídeo; así queda detrás */
+  position: static;
+  grid-row: 2 / 4; /* en móvil cubre desde el vídeo hasta los datos */
+  grid-column: 1;
+}
+
+/* Si hay sitio: vídeo a la izquierda, datos a la derecha,
+   y todo junto mide lo mismo que la lista */
+@container player-zone (min-width: 380px) {
+  .player-view {
+    height: 100%;
+    min-height: 560px;
+    grid-template-columns: clamp(260px, 56%, 300px) minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-areas:
+      'hero hero'
+      'media stats';
+    column-gap: 1.25rem;
+  }
+
+  .player-body {
+    grid-row: 2;
+    grid-column: 1 / -1; /* cubre el vídeo y los datos a lo ancho */
+  }
+}
+
+.empty-state {
+  border: 1px dashed rgba(205, 220, 57, 0.35);
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(106, 247, 120, 0.1), transparent 65%),
+    var(--eagles-surface);
+}
+
+.empty-eagle {
+  /* El águila animada, bien grande (240 px) */
+  width: min(240px, 70%);
+}
+
+#player-zone {
+  scroll-margin-top: 1rem;
+}
+
+/* Aquí el título va centrado, así que le quitamos la rayita de la izquierda */
+.empty-state .section-title {
+  justify-content: center;
+  text-align: center;
+
+  &::before { display: none; }
+}
