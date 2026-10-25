@@ -1,0 +1,78 @@
+<!-- Filtramos la lista una sola vez y usamos el resultado en el contador y en la lista -->
+@let filtered = players | playerFilter: search() : position();
+
+<section class="card shadow-sm h-100 players" aria-labelledby="players-title">
+  <div class="card-header border-0 pt-3 pb-0">
+    <div class="d-flex align-items-baseline justify-content-between gap-2 mb-3">
+      <h2 id="players-title" class="section-title mb-0">Team</h2>
+      <span class="count" aria-live="polite">{{ filtered.length }} / {{ players.length }} players</span>
+    </div>
+
+    <!-- Los dos filtros: buscar por nombre y elegir posición -->
+    <form class="filters" role="search" (submit)="$event.preventDefault()">
+      <label for="search" class="visually-hidden">Search by name</label>
+      <div class="search-field">
+        <i class="bi bi-search" aria-hidden="true"></i>
+        <input
+          id="search"
+          name="search"
+          type="search"
+          class="form-control form-control-sm"
+          placeholder="Search"
+          autocomplete="off"
+          [(ngModel)]="search"
+        />
+      </div>
+
+      <label for="position" class="visually-hidden">Filter by position</label>
+      <select id="position" name="position" class="form-select form-select-sm" [(ngModel)]="position">
+        <option value="">All positions</option>
+        @for (pos of positions; track pos) {
+          <option [value]="pos">{{ pos }}</option>
+        }
+      </select>
+    </form>
+  </div>
+
+  <div class="card-body pt-3">
+    <ul class="player-list list-unstyled mb-0 d-grid gap-2">
+      @for (player of filtered; track player.id; let i = $index) {
+        <!-- Cada fila aparece un poquito después que la anterior -->
+        <li class="player-row" [style.--i]="i">
+          <button
+            type="button"
+            class="player-item w-100 text-start"
+            [attr.data-player-id]="player.id"
+            [class.selected]="player.id === selectedId()"
+            [attr.aria-pressed]="player.id === selectedId()"
+            (click)="select(player)"
+          >
+            <img class="avatar" [src]="player.foto" [alt]="'Photo of ' + player.nombre" width="56" height="56" loading="lazy" />
+            @if (player.dorsal !== undefined) {
+              <span class="dorsal" aria-label="Jersey number">{{ player.dorsal }}</span>
+            }
+            <span class="info">
+              <span class="name">{{ player.nombre }} {{ player.apellidos }}</span>
+              <span class="meta">
+                <span class="badge pos-badge">{{ player.posicion }}</span>
+                <span>{{ player.brazo }}-handed</span>
+                @if (player.edad !== undefined) {
+                  <span>{{ player.edad }} y/o</span>
+                }
+              </span>
+            </span>
+            <i class="bi bi-chevron-right chevron" aria-hidden="true"></i>
+          </button>
+        </li>
+      } @empty {
+        <li class="empty text-center py-4">
+          <i class="bi bi-funnel fs-3 d-block mb-2" aria-hidden="true"></i>
+          No players match your filters.
+          <button type="button" class="btn btn-link btn-sm d-block mx-auto" (click)="clearFilters()">
+            Clear filters
+          </button>
+        </li>
+      }
+    </ul>
+  </div>
+</section>
