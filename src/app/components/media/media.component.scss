@@ -1,0 +1,95 @@
+/* El reproductor ocupa todo el alto que le toque */
+:host {
+  display: flex;
+  min-height: 0;
+}
+
+/*
+ * El vídeo llena todo su espacio, de borde a borde, y los botones
+ * van encima, sobre una sombra oscura abajo para que se lean bien.
+ */
+.media {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: var(--eagles-radius) var(--eagles-radius) 0 0;
+}
+
+/*
+ * En el móvil el marco toma la forma del vídeo (vertical), pero con un tope
+ * de altura para que no ocupe tres pantallas.
+ */
+.video-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--video-ratio, 16 / 9);
+  max-height: min(70vh, 640px);
+  background: #000;
+
+  /* El vídeo se adapta al marco y no al revés (si no, con sus 1280 px de alto
+     lo empujaría todo). «cover» hace que lo llene entero recortando lo mínimo. */
+  video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+  }
+
+  /* La sombra de abajo, para que los botones se vean sobre cualquier imagen */
+  &::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 45%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.35) 55%, transparent);
+    pointer-events: none; /* la sombra no tapa los clics: tocar el vídeo sigue pausándolo */
+  }
+}
+
+/* Si hay sitio, el vídeo ocupa todo el alto disponible */
+@container player-zone (min-width: 380px) {
+  .media {
+    border-radius: var(--eagles-radius) 0 0 var(--eagles-radius);
+  }
+
+  .video-wrapper {
+    flex: 1;
+    min-height: 220px;
+    max-height: none;
+    aspect-ratio: auto;
+  }
+}
+
+/* Los botones, flotando encima del vídeo */
+.controls {
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: 1;
+  padding: 1rem;
+  color: #fff;
+
+  .btn-outline-eagles {
+    --bs-btn-bg: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(6px);
+  }
+
+  .form-range::-webkit-slider-runnable-track { background-color: rgba(255, 255, 255, 0.25); }
+  .form-range::-moz-range-track { background-color: rgba(255, 255, 255, 0.25); }
+}
+
+.time {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.85rem;
+  min-width: 4ch;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.volume .form-range {
+  width: 90px;
+}
