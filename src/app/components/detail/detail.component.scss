@@ -1,0 +1,171 @@
+/*
+ * La ficha tiene dos piezas: el nombre (arriba) y los datos (al lado del vídeo).
+ * Con esta línea le decimos a la página que coloque cada pieza por separado,
+ * cada una en su hueco, aunque las dos vengan del mismo componente.
+ */
+:host {
+  display: contents;
+}
+
+.detail-card {
+  overflow: hidden;
+  animation: slide-in 0.25s ease-out;
+}
+
+/* ---------- Arriba: foto y nombre ---------- */
+
+.detail-hero {
+  grid-area: hero;
+  position: relative;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(106, 247, 120, 0.22), transparent 60%),
+    radial-gradient(ellipse at 0% 100%, rgba(205, 220, 57, 0.12), transparent 55%),
+    #050605;
+  color: var(--eagles-text);
+}
+
+.detail-photo {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  border: 3px solid var(--eagles-lime);
+  box-shadow: 0 0 24px rgba(205, 220, 57, 0.35);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.detail-heading {
+  min-width: 0;
+}
+
+.detail-dorsal {
+  font-family: var(--eagles-font-display);
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--eagles-neon);
+  letter-spacing: 0.05em;
+}
+
+.detail-name {
+  padding-right: 2.5rem; /* hueco para la X de cerrar */
+  font-family: var(--eagles-font-display);
+  font-size: clamp(1.9rem, 6cqi, 2.6rem);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 0.95;
+}
+
+.nationality {
+  font-size: 0.85rem;
+  color: var(--eagles-text-soft);
+}
+
+.detail-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  --bs-btn-color: var(--eagles-text-soft);
+  --bs-btn-hover-color: var(--eagles-on-lime);
+  --bs-btn-hover-bg: var(--eagles-lime);
+  --bs-btn-active-bg: var(--eagles-lime);
+  --bs-btn-active-color: var(--eagles-on-lime);
+  --bs-btn-focus-shadow-rgb: 205, 220, 57;
+  border-radius: 50%;
+  font-size: 1.1rem;
+}
+
+.pos-badge {
+  font-size: 0.8rem;
+  background: var(--eagles-lime);
+  color: var(--eagles-on-lime);
+  font-weight: 600;
+}
+
+/* ---------- Los datos: sencillos, solo nombre y valor con una rayita entre medias ---------- */
+
+.detail-stats {
+  grid-area: stats;
+  padding: 0.5rem 1.25rem 0.5rem 0.25rem;
+}
+
+.stats {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin: 0;
+}
+
+.stat {
+  flex: 1; /* las filas se reparten el alto por igual */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+
+  &:last-child { border-bottom: 0; }
+
+  dt {
+    margin-bottom: 0.15rem;
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--eagles-text-muted);
+  }
+
+  dd {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--eagles-text);
+
+    small {
+      margin-left: 0.15rem;
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: var(--eagles-text-muted);
+    }
+  }
+
+  .pending-value {
+    font-weight: 400;
+    color: var(--eagles-text-muted);
+  }
+}
+
+.description {
+  padding: 0.75rem 0;
+  color: var(--eagles-text-soft);
+}
+
+/* Si la columna es estrecha (móvil): los datos en dos columnitas para ahorrar espacio */
+@container player-zone (max-width: 379.98px) {
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 1.25rem;
+  }
+
+  .stat {
+    padding: 0.6rem 0;
+    border-bottom: 0;
+  }
+
+  .detail-stats { padding: 0 1rem 0.75rem; }
+}
+
+@container player-zone (max-width: 340px) {
+  .detail-hero { flex-direction: column; text-align: center; }
+  .detail-name { padding-right: 0; }
+  .detail-hero .d-flex { justify-content: center; }
+}
+
+@keyframes slide-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}

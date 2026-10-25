@@ -1,0 +1,41 @@
+@let p = player();
+
+<!-- Arriba: foto, nombre y posición, a todo lo ancho -->
+<article class="card shadow-sm detail-card detail-hero" aria-labelledby="detail-title">
+  <img class="detail-photo" [src]="p.foto" [alt]="'Photo of ' + p.nombre + ' ' + p.apellidos" width="88" height="88" />
+  <div class="detail-heading">
+    @if (p.dorsal !== undefined) {
+      <span class="detail-dorsal">#{{ p.dorsal }}</span>
+    }
+    <h2 id="detail-title" class="detail-name mb-1"><span class="slanted">{{ p.nombre }} {{ p.apellidos }}</span></h2>
+    <div class="d-flex flex-wrap align-items-center gap-2">
+      <span class="badge pos-badge">{{ p.posicion }}</span>
+      @if (p.nacionalidad) {
+        <span class="nationality"><i class="bi bi-geo-alt-fill me-1" aria-hidden="true"></i>{{ p.nacionalidad }}</span>
+      }
+    </div>
+  </div>
+  <button type="button" class="btn btn-touch detail-close" aria-label="Close profile" (click)="close()">
+    <i class="bi bi-x-lg" aria-hidden="true"></i>
+  </button>
+</article>
+
+<!-- Los datos, a la derecha del vídeo y en el mismo bloque -->
+<section class="detail-card detail-stats" aria-label="Player data">
+  <dl class="stats">
+    @for (stat of stats(); track stat.label) {
+      <div class="stat" [class.pending]="stat.value === undefined">
+        <dt>{{ stat.label }}</dt>
+        @if (stat.value !== undefined) {
+          <dd>{{ stat.value }} @if (stat.unit) {<small>{{ stat.unit }}</small>}</dd>
+        } @else {
+          <dd class="pending-value">Pending</dd>
+        }
+      </div>
+    }
+  </dl>
+
+  @if (p.descripcion) {
+    <p class="mb-0 description">{{ p.descripcion }}</p>
+  }
+</section>
